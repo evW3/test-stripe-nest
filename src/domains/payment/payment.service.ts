@@ -11,7 +11,7 @@ export class PaymentService {
               });
             return response.client_secret
         } catch(e) {
-            throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+            throw new HttpException(`${ e.message }`, HttpStatus.BAD_REQUEST);
         }
     }
 }

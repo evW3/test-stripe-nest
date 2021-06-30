@@ -8,7 +8,7 @@ export class PricesService {
         try {
             return await stripe.prices.create(price);
         } catch(e) {
-            throw new HttpException('Server error!', HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException(`${ e.message }`, HttpStatus.BAD_REQUEST);
         }
     }
 }

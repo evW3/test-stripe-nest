@@ -8,7 +8,7 @@ export class CustomersService {
         try {
             return await stripe.customers.create(customer);
         } catch(e) {
-            throw new HttpException('Server error!', HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException(`${ e.message }`, HttpStatus.BAD_REQUEST);
         }
     }
 }

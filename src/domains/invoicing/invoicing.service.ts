@@ -15,8 +15,7 @@ export class InvoicingService {
             await stripe.invoices.sendInvoice(invoice.id);
             return invoice;
         } catch(e) {
-            console.log(e);
-            throw new HttpException('Server error!', HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new HttpException(`${ e.message }`, HttpStatus.BAD_REQUEST);
         }
     }
 }
