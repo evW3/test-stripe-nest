@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Send value</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <div id="v-app">
+        <form @submit.prevent="onSubmit">
+            <div id="card-element"></div>
+            <button id="submit">
+              <div class="spinner hidden" id="spinner"></div>
+              <span id="button-text">Pay now</span>
+            </button>
+            <p id="card-error" role="alert"></p>
+            <p class="result-message hidden">
+              Payment succeeded, see the result in your
+              <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
+            </p>
+        </form>
+    </div>
+    <script>
+        let app = new Vue({
+          el: '#v-app',
+          data: () => ({
+            value: 100,
+            clientSecret: null,
+            stripe: null,
+            innerCard: null
+          }),
+          methods: {
+            async onSubmit() {
+              this.stripe.confirmCardPayment(this.clientSecret, {
+                payment_method: {
+                  card: this.innerCard
+                }
+              }).then(function(result) {
+                if (result.error) {
+                  console.log(result.error);
+                } else {
+                  console.log('All right');
+                }
+              });
+            }
+          },
+          async beforeMount() {
+            this.clientSecret = (await axios.post('http://localhost:8080/payment/create-intent', { value: this.value })).data.clientSecret;
+            this.stripe = Stripe("pk_test_51J7bzZEReTx4xyQodMhLAY5ipXhGzeWUpUXn02D2SpVwI9Q34Umvfk2yumvuDlWSylRU3Ao4VySWxdU9i7mCFrn000SqdGKt1I");
+            let elements = this.stripe.elements();
+            let card = elements.create("card");
+            card.mount("#card-element");
+            this.innerCard = card;
+          }
+        })
+    </script>
+</body>
+</html>
