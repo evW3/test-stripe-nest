@@ -11,7 +11,6 @@ export class PaymentService {
               });
             return response.client_secret
         } catch(e) {
-            console.log(e);
             throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
         }
     }
